@@ -17,11 +17,65 @@ Repositorio: https://github.com/FUNDACIONECOPIENSAEVOLUTION/eco-Notas
 
 ## Importante: PC y celular
 
-**La primera versión es local.** Los datos se guardan en el almacenamiento del navegador que se está usando; **no existe aún una base de datos sincronizada en la nube**.
+Hay **dos modos**: uso local sin servidor y uso sincronizado con el **servidor Java 21** incluido en `backend/`.
 
-Para pasar del PC al celular: en Datos → **Exportar copia JSON**; transfiere de forma privada esa copia al celular; en el celular, Datos → **Importar copia**; escanea; exporta allí el JSON actualizado; reimpórtalo en el PC. Las importaciones **reemplazan** el estado anterior: realiza una copia de seguridad antes. No edites y escanees a la vez en varios equipos.
+- **Modo local:** los datos se almacenan en el navegador. Para pasar del PC al celular exporta una copia JSON en **Datos**, transfiérela de forma privada, impórtala en el otro equipo y trae la copia actualizada de vuelta. Al importar se **reemplazan** los datos anteriores; haz siempre una copia previa.
+- **Modo Java (opcional):** una vez que el administrador despliegue el servicio privado con HTTPS, abre **7. Nube Java**, introduce su URL, usuario y contraseña, y pulsa **Conectar y descargar**. Tras conectarte, las ediciones se enviarán automáticamente al servidor. En el segundo equipo inicia sesión y descarga la misma información. La contraseña se mantiene solo en la memoria del navegador y se vuelve a pedir después de recargar la página.
+- Si dos equipos editan datos simultáneamente y uno intenta sobrescribir los cambios del otro, el servidor devuelve un **conflicto 409** y la sincronización se detiene. Exporta una copia JSON antes de descargar o fusionar datos manualmente. **No hay combinación automática** de cambios concurrentes.
 
 **El repositorio público solo incluye código.** Nunca hagas commit de nombres, notas, respuestas reales, respaldos JSON, fotografías de estudiantes ni listados.
+
+
+## Servidor Java 21 · instalación y pruebas
+
+El backend es un servicio pequeño **sin dependencias externas** basado en el servidor HTTP incluido en el JDK. Guarda un único documento JSON por instancia, separado del repositorio, con control de versiones **ETag / If-Match**, y autentica al docente mediante HTTP Basic.
+
+> **Importante:** solo usar HTTP Basic a través de HTTPS. En equipos de producción debe colocarse tras un proxy TLS confiable. El servidor Java, a diferencia de los archivos de GitHub Pages, no se ejecuta gratuitamente dentro de GitHub Pages.
+
+### Ejecutar localmente
+
+Instala Java 21 y en la raíz del repositorio ejecuta:
+
+\`\`\`bash
+javac backend/EcoNotasServer.java backend/EcoNotasServerTest.java
+java -cp backend EcoNotasServerTest
+\`\`\`
+
+Para probar el servicio en Linux o macOS:
+
+\`\`\`bash
+export ECONOTAS_USER=docente
+export ECONOTAS_PASSWORD='CAMBIA_ESTO_POR_UNA_CLAVE_UNICA_LARGA_Y_SEGURA'
+export ECONOTAS_ALLOWED_ORIGIN='https://fundacionecopiensaevolution.github.io'
+export ECONOTAS_DATA_DIR='./private-data'
+java -cp backend EcoNotasServer
+\`\`\`
+
+En Windows PowerShell:
+
+\`\`\`powershell
+$env:ECONOTAS_USER = "docente"
+$env:ECONOTAS_PASSWORD = "CAMBIA_ESTO_POR_UNA_CLAVE_UNICA_LARGA_Y_SEGURA"
+$env:ECONOTAS_ALLOWED_ORIGIN = "https://fundacionecopiensaevolution.github.io"
+$env:ECONOTAS_DATA_DIR = ".\\private-data"
+javac backend/EcoNotasServer.java
+java -cp backend EcoNotasServer
+\`\`\`
+
+El servicio escucha de forma predeterminada en \`127.0.0.1:8080\`; \`GET /api/health\` devuelve el estado. Para hospedar en nube, hay un \`backend/Dockerfile\` (contexto de compilación: **raíz del repositorio**, ruta del Dockerfile: **backend/Dockerfile**). El contenedor escucha en \`0.0.0.0:$PORT\`, pensado para un proveedor con terminación HTTPS. Monta obligatoriamente un **volumen persistente en \`/data\`**; sin volumen los datos podrían desaparecer al recrearse el contenedor.
+
+### API
+
+| Ruta | Método | Protección | Función |
+|---|---|---|---|
+| \`/api/health\` | GET | Pública | Verificar ejecución |
+| \`/api/state\` | GET | Usuario/contraseña | Descargar JSON y obtener ETag |
+| \`/api/state\` | PUT | Usuario/contraseña, \`If-Match\`, JSON | Guardar únicamente si la versión coincide |
+| \`/api/state\` | OPTIONS | CORS de origen autorizado | Permitir preflight del navegador |
+
+Configura **\`ECONOTAS_ALLOWED_ORIGIN\`** con el origen exacto del sitio, sin la ruta del repositorio (por ejemplo, \`https://fundacionecopiensaevolution.github.io\`). El navegador enviará credenciales solo a la dirección del backend introducida por el docente. Usa una contraseña única y larga: nunca copies secretos al código, README, variables públicas de Pages ni Git. Verifica que el host del backend esté bajo tu control antes de escribir la contraseña.
+
+**Estado del servidor Java:** piloto para **un docente/una instancia**. No tiene todavía cuentas independientes por docente, roles de institución, cifrado de datos en reposo, combinación de cambios, copias de seguridad automáticas, políticas de retención ni auditoría reglamentaria. Antes de usarlo con expedientes de menores, deben implementarse controles y acuerdos adecuados de protección de datos.
 
 ## Compatibilidad por tipo
 
@@ -79,4 +133,4 @@ Las licencias permisivas citadas permiten uso comercial, sujetas a conservar avi
 
 ## Próxima fase para uso institucional
 
-Autenticación de docentes, almacenamiento cifrado y privado, sincronización real PC-celular, roles administrativos, historial de correcciones, auditoría de cambios, procesamiento por lotes, motor especializado para caligrafía, evaluaciones pedagógicas más complejas e integración de calificaciones con sistemas institucionales (previa autorización y validación).
+Cuentas individuales de docentes, almacenamiento cifrado en reposo, sincronización multiusuario, roles administrativos, historial de correcciones, auditoría de cambios, procesamiento por lotes, motor especializado para caligrafía, evaluaciones pedagógicas más complejas e integración de calificaciones con sistemas institucionales (previa autorización y validación).
