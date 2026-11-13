@@ -22,6 +22,7 @@ on("new-exam","click",E.createExam);on("save-exam","click",E.saveExam);on("delet
 on("q-type","change",E.updateType);on("q-image","change",async e=>await E.onImage(e.target.files[0]));on("add-question","click",E.addQuestion);
 on("questions-list","click",e=>{const edit=e.target.closest("[data-edit-q]"),del=e.target.closest("[data-delete-q]");if(edit)E.editQuestion(edit.dataset.editQ);else if(del&&confirm("¿Eliminar esta pregunta?"))E.deleteQuestion(del.dataset.deleteQ)});
 on("print-exam","change",E.renderPrintControls);on("prepare-print","click",E.preparePrint);on("print-button","click",()=>{if(E.preparePrint())setTimeout(()=>window.print(),200)});
+on("scan-retry","click",E.allowRescan);
 on("start-camera","click",E.startCamera);on("stop-camera","click",E.stopCamera);on("scan-upload","change",e=>E.scanUpload(e.target.files[0]));
 on("review-record","change",E.renderReview);on("save-review","click",E.saveReview);
 on("grades-group","change",E.renderGradebook);on("grades-subject","change",E.renderGradebook);on("grades-year","change",E.renderGradebook);
