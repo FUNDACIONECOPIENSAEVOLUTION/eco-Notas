@@ -3,8 +3,8 @@
 const E=window.Eco, $=E.$;
 let endpoint="",authorization="",etag=null,connected=false,conflict=false,busy=false;
 let change=0,done=0,timer=null,inflight=false;
-function notice(text,error=false){const el=$("sync-status");el.textContent=text;el.classList.toggle("warning",error)}
-function status(){return connected?"Conectado a "+endpoint+(conflict?" · CONFLICTO DE VERSIONES":busy?" · sincronizando…":change>done?" · hay cambios por subir":" · sincronizado"):"No hay sesión activa con Java."}
+function notice(text,error=false){const el=$("sync-status");el.textContent=text;el.classList.toggle("warning",error);E.updateCloudNote?.()}
+function status(){return connected?"Conectado a "+endpoint+(conflict?" · CONFLICTO DE VERSIONES":busy?" · sincronizando…":change>done?" · hay cambios por subir":" · sincronizado"):"No hay sesión activa con un servidor."}
 function validURL(str){
   let u;try{u=new URL(str)}catch{throw Error("La URL del servidor no es válida.");}
   const loopback=["localhost","127.0.0.1","::1","[::1]"].includes(u.hostname);
@@ -44,7 +44,7 @@ async function connect(){
     endpoint=validURL(url);
     if(!user||!password)throw Error("Ingresa el usuario y la contraseña.");
     authorization=basic(user,password);
-    notice("Consultando el servidor Java…");
+    notice("Consultando el servidor seguro…");
     const response=await request("GET");
     if(response.status===404){
       etag=response.headers.get("ETag")||'"0"';connected=true;conflict=false;
@@ -67,8 +67,8 @@ function markChanged(){
   notice(status());
 }
 async function upload(){
-  if(!connected||conflict||busy||inflight){if(!connected)notice("Primero conecta la cuenta del docente.",true);return}
-  inflight=true;notice("Subiendo datos al servidor Java…");
+  if(!connected||conflict||busy||inflight){if(!connected)notice("Conecta primero el servidor del docente.",true);return}
+  inflight=true;notice("Subiendo datos a la nube…");
   const seen=change;
   try {
     const body=JSON.stringify(E.data);
@@ -77,7 +77,7 @@ async function upload(){
     if(response.status===413)throw Error("Los datos exceden el límite de 8 MB. Reduce imágenes y haz una copia.");
     if(!response.ok)throw Error("Error HTTP "+response.status+" al guardar.");
     etag=response.headers.get("ETag");if(!etag)throw Error("El servidor no entregó un ETag.");
-    done=seen;notice("Datos guardados y sincronizados con el servidor Java.");
+    done=seen;notice("El servidor confirmó el guardado. Datos sincronizados.");
   }catch(e){notice("No se sincronizó: "+e.message+" Puedes volver a pulsar «Guardar mis datos».",true)}
   finally {
     inflight=false;
@@ -111,6 +111,7 @@ function init(){
   $("sync-download").addEventListener("click",downloadFromServer);
   $("sync-disconnect").addEventListener("click",()=>disconnect());
   E.onLocalChange=markChanged;
+  E.getSyncStatus=()=>({connected,pending:change>done,inflight,conflict});
   notice(status());
 }
 document.addEventListener("DOMContentLoaded",init);
