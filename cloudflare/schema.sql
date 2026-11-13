@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS gradebook (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  state TEXT NOT NULL,
+  etag TEXT NOT NULL
+);
