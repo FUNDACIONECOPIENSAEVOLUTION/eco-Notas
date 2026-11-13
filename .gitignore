@@ -1,0 +1,25 @@
+# Datos privados, notas, listas y copias de seguridad de docentes
+private-data/
+backend/private-data/
+*.backup.json
+*respaldo*.json
+EcoNotas_respaldo_*.json
+EcoNotas_*.xlsx
+EcoNotas_*.csv
+*.db
+*.db-shm
+*.db-wal
+
+# Java
+*.class
+target/
+build/
+.gradle/
+
+# Node/editor
+node_modules/
+.DS_Store
+.vscode/
+.env
+.env.*
+!.env.example
