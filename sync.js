@@ -38,10 +38,10 @@ function applyRemote(remote){
   return true;
 }
 async function connect(){
+  const url=$("sync-url").value.trim(),user=$("sync-user").value.trim(),password=$("sync-password").value;
   disconnect(false);
   try{
-    endpoint=validURL($("sync-url").value.trim());
-    const user=$("sync-user").value.trim(),password=$("sync-password").value;
+    endpoint=validURL(url);
     if(!user||!password)throw Error("Ingresa el usuario y la contraseña.");
     authorization=basic(user,password);
     notice("Consultando el servidor Java…");
