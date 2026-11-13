@@ -12,7 +12,7 @@ function blank(){return {version:1,groups:[],students:[],exams:[],grades:[]}}
 let data=blank();try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.groups)&&Array.isArray(d.students)&&Array.isArray(d.exams)&&Array.isArray(d.grades))data=d}catch(e){console.warn("No se recuperó el estado",e)}
 const E=window.Eco={data,$,esc,id,today,norm,types,objective};
 function toast(message,error=false){const el=$("toast");el.textContent=message;el.style.background=error?"#962b21":"#164934";el.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.add("hidden"),4300)}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast("No hay espacio local. Haz una copia y reduce imágenes.",true)}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));E.onLocalChange?.()}catch(e){toast("No hay espacio local. Haz una copia y reduce imágenes.",true)}}
 function download(content,name,type="text/plain;charset=utf-8"){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
 function populate(select,items,placeholder="",selected){const el=$(select);if(!el)return;const previous=selected??el.value;el.innerHTML=(placeholder?'<option value="">'+esc(placeholder)+'</option>':"")+items.map(v=>'<option value="'+esc(v.value)+'">'+esc(v.label)+'</option>').join("");if(items.some(v=>v.value===previous))el.value=previous;else if(placeholder)el.value=""}
 function groupsOf(student){return Array.isArray(student.groups)?student.groups:(student.group?[student.group]:[])}
