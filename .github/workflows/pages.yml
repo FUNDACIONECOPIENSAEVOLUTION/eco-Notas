@@ -24,10 +24,12 @@ jobs:
           node --check scan.js
           node --check app.js
           node --check sync.js
+          node --check cloudflare/worker.mjs
       - name: Pruebas unitarias
         run: |
           node tests/smoke.cjs
           node tests/sync.cjs
+          node tests/scan-ui.cjs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
