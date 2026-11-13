@@ -25,7 +25,9 @@ jobs:
           node --check app.js
           node --check sync.js
       - name: Pruebas unitarias
-        run: node tests/smoke.cjs
+        run: |
+          node tests/smoke.cjs
+          node tests/sync.cjs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
