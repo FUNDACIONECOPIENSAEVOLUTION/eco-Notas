@@ -19,10 +19,11 @@
 <script defer src="./exam.js"></script>
 <script defer src="./scan.js"></script>
 <script defer src="./app.js"></script>
+<script defer src="./sync.js"></script>
 </head>
 <body>
 <header><div><h1>🌿 Eco-Notas <span style="color:#9fe9c9">Pro</span></h1><small>Exámenes · Escaneo QR / OMR / OCR · Libro de notas</small></div>
-<nav><button data-tab="students" class="active">1. Cursos</button><button data-tab="exams">2. Exámenes</button><button data-tab="print">3. Imprimir</button><button data-tab="scan">4. Escanear</button><button data-tab="grades">5. Calificaciones</button><button data-tab="backup">6. Datos</button></nav></header>
+<nav><button data-tab="students" class="active">1. Cursos</button><button data-tab="exams">2. Exámenes</button><button data-tab="print">3. Imprimir</button><button data-tab="scan">4. Escanear</button><button data-tab="grades">5. Calificaciones</button><button data-tab="backup">6. Datos</button><button data-tab="sync">7. Nube Java</button></nav></header>
 <main>
 <section id="tab-students" class="tab active">
 <div class="card"><h2>👥 Estudiantes y cursos</h2><p class="muted">Crea cursos, asigna códigos permanentes y carga listados desde Excel, CSV o tablas de Word. El mismo código conserva todas las notas del año.</p>
@@ -86,6 +87,14 @@
 <div class="row" style="margin-top:18px"><button id="export-backup" class="btn">Exportar copia JSON</button><input id="import-backup" type="file" accept=".json" style="max-width:260px"><button id="load-demo" class="btn secondary">Cargar ejemplo de inglés</button><button id="clear-data" class="btn danger">Borrar datos locales</button></div>
 <p class="muted">Los listados contienen datos personales de menores. Conserva las copias privadas, no subas exámenes ni listados reales a repositorios públicos, y protege los dispositivos. El repositorio solo debe contener el programa, nunca sus notas.</p>
 <div id="backup-info" class="muted"></div></div></section>
+<section id="tab-sync" class="tab"><div class="card"><h2>☁️ Sincronización privada con Java</h2><p>Conecta el programa web al servidor Java de Eco-Notas. Una vez conectado, las notas y los exámenes se guardarán en el servidor al cambiarse y podrán descargarse desde el computador o el celular.</p>
+<p class="hint warning">Primero instala y protege el servidor Java detrás de HTTPS. No pongas contraseñas ni datos de alumnos en GitHub. La aplicación web no almacena la contraseña: deberás iniciar sesión de nuevo al recargar la página. Si dos dispositivos editan a la vez, se detiene la sincronización para evitar perder notas.</p>
+<div class="grid"><label class="field"><span>URL del servidor Java (HTTPS)</span><input id="sync-url" placeholder="https://notas.ejemplo.org" autocomplete="url"></label>
+<label class="field"><span>Usuario docente</span><input id="sync-user" autocomplete="username" placeholder="docente"></label>
+<label class="field"><span>Contraseña privada</span><input id="sync-password" type="password" autocomplete="current-password" placeholder="Contraseña definida en el servidor"></label></div>
+<div class="row" style="margin:14px 0"><button class="btn" id="sync-connect">Conectar y descargar</button><button class="btn secondary" id="sync-upload">Guardar mis datos en Java</button><button class="btn secondary" id="sync-download">Actualizar desde el servidor</button><button class="btn danger" id="sync-disconnect">Desconectar</button></div>
+<div class="hint" id="sync-status" role="status">Sin conexión al servicio Java. Los datos permanecen únicamente en este navegador.</div>
+<p class="muted">El servidor Java solo atiende a un docente por instancia en esta versión inicial. Para varios docentes se necesitará autenticación individual y permisos por institución.</p></div></section>
 </main>
 <div id="print-pack" class="print-pack"></div><div id="toast" class="hidden"></div>
 </body></html>
