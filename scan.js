@@ -2,10 +2,74 @@
 (function(){
 const E=window.Eco,{data,$,esc,norm,toast,save,objective}=E;
 let stream=null,busy=false,interval=null,lastQR="",stable=0,lastCapture="",lastAt=0;
+let ackTimer=null;
+const scannedInSession=new Set();
+let scanHistory=[];
+function pageKey(ex, st, payload){return [ex.id,st.id,ex.revision,payload.t,payload.p].join(":")}
+function flash(kind,studentName,scoreText,description){
+  const panel=$("scan-ack");
+  if(!panel)return;
+  clearTimeout(ackTimer);
+  panel.className="scan-ack "+(kind==="success"?"":kind);
+  $("scan-ack-icon").textContent=kind==="success"?"✓":kind==="repeat"?"↺":kind==="pending"?"!":"×";
+  $("scan-ack-label").textContent={success:"Lectura confirmada",pending:"Escaneo registrado",repeat:"Hoja ya escaneada",error:"No se registró"}[kind]||"Estado";
+  $("scan-ack-student").textContent=studentName;
+  $("scan-ack-grade").textContent=scoreText;
+  $("scan-ack-next").textContent=description;
+  ackTimer=setTimeout(()=>panel.classList.add("hidden"),kind==="error"?2000:kind==="repeat"?2200:3200);
+  if(kind==="success"||kind==="pending")announceTone();
+}
+function announceTone(){
+  try {
+    if($("scan-sound")?.checked) {
+      const Audio=window.AudioContext||window.webkitAudioContext;
+      if(Audio){
+        const ctx=new Audio();
+        const osc=ctx.createOscillator(),gain=ctx.createGain();
+        osc.type="sine";osc.frequency.setValueAtTime(700,ctx.currentTime);
+        osc.frequency.setValueAtTime(950,ctx.currentTime+0.09);
+        gain.gain.setValueAtTime(0.0001,ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.095,ctx.currentTime+0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.22);
+        osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+0.23);
+        osc.onended=()=>ctx.close().catch(()=>{});
+      }
+    }
+    navigator.vibrate?.(85);
+  } catch(e){ /* aviso visual sigue disponible */ }
+}
+function formatGrade(record){return record?.status==="complete" && Number.isFinite(record.finalGrade) ? record.finalGrade.toFixed(2).replace(".",",")+" / 5,00" : "Revisión pendiente"}
+function cloudNote(){
+  const status=E.getSyncStatus?.();
+  if(status?.conflict)return "Conflicto de sincronización. Conserva la copia local y revisa la nube antes de continuar.";
+  if(status?.connected)return status?.pending||status?.inflight?"Guardado local; sincronización con la nube pendiente…":"Guardado local. Sincronización con la nube conectada.";
+  return "Guardado en este dispositivo. Para usar otro celular conecta la nube o transfiere la copia JSON.";
+}
+function updateCloudNote(){const el=$("scan-cloud-status");if(el)el.textContent=cloudNote()}
+function addHistory(ex,st,record,key,kind){
+  if(kind==="repeat")return;
+  if(scannedInSession.has(key))return;
+  scannedInSession.add(key);
+  scanHistory.unshift({key,name:st.name,exam:ex.title,grade:formatGrade(record),pending:record.status!=="complete",time:new Date().toLocaleTimeString("es-CO",{hour:"2-digit",minute:"2-digit"})});
+  if(scanHistory.length>8)scanHistory=scanHistory.slice(0,8);
+  const count=$("scan-count");if(count)count.textContent=String(scannedInSession.size);
+  const list=$("scan-history");if(list)list.innerHTML=scanHistory.map(h=>'<div class="scan-history-item '+(h.pending?"pending":"")+'"><div><strong>'+esc(h.name)+'</strong><small>'+esc(h.exam)+' · '+esc(h.time)+'</small></div><span class="history-grade">'+esc(h.grade)+'</span></div>').join("");
+}
+function updateResult(ex,st,record,pending,marks,duplicate=false){
+  const label=$("scan-record-badge");if(label){
+    label.className="status-pill "+(duplicate?"repeat":record.status==="complete"?"done":"review");
+    label.textContent=duplicate?"Ya escaneado":record.status==="complete"?"✓ Calificado":"Por revisar";
+  }
+  $("scan-result").innerHTML='<h4 class="student-result-name">'+esc(st.name)+'</h4><div class="student-result-meta">Código '+esc(st.id)+' · '+esc(ex.group)+'<br>'+esc(ex.subject)+' · '+esc(ex.title)+'</div>'+
+    '<div class="grade-score '+(record.status==="complete"?"":"pending")+'"><strong>'+esc(formatGrade(record))+'</strong><span>'+(duplicate?"Esta hoja ya se registró previamente. No se ha creado una segunda nota.":record.status==="complete"?"Examen completo · escala 0 a 5":"Faltan "+pending+" respuestas por revisar o escanear")+'</span></div>'+
+    '<div class="result-answers">'+Object.entries(marks||{}).map(([qid,m])=>'<span class="chip">P'+(ex.questions.findIndex(q=>q.id===qid)+1)+': '+esc(m.detected||"Sin marca")+' '+(m.fraction==null?"?":m.fraction?"✓":"✕")+'</span>').join("")+'</div>';
+  updateCloudNote();
+}
+
 function status(s,error=false){$("scan-status").textContent=s;$("scan-status").classList.toggle("warning",error)}
 function cameraReady(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.isSecureContext)}
-async function startCamera(){if(!cameraReady())return toast("La cámara necesita HTTPS (o localhost) y permiso del navegador.",true);try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});const v=$("camera-video");v.srcObject=stream;await v.play();v.classList.remove("hidden");$("camera-placeholder").classList.add("hidden");$("camera-overlay").classList.remove("hidden");interval=setInterval(scanLoop,750);status("Cámara activada: muestra la hoja completa, con QR y cuatro esquinas.");}catch(e){toast("No se pudo abrir la cámara: "+e.message,true)}}
-function stopCamera(){if(interval)clearInterval(interval);interval=null;stream?.getTracks().forEach(t=>t.stop());stream=null;$("camera-video").classList.add("hidden");$("camera-placeholder").classList.remove("hidden");$("camera-overlay").classList.add("hidden");status("Cámara detenida.")}
+async function startCamera(){if(!cameraReady())return toast("La cámara necesita HTTPS (o localhost) y permiso del navegador.",true);try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});const v=$("camera-video");v.srcObject=stream;await v.play();v.classList.remove("hidden");$("camera-placeholder").classList.add("hidden");$("camera-overlay").classList.remove("hidden");interval=setInterval(scanLoop,750);$("scan-camera-badge").textContent="● Activa";$("scan-camera-badge").className="status-pill live";status("Cámara activada: muestra la hoja completa, con QR y cuatro esquinas.");}catch(e){toast("No se pudo abrir la cámara: "+e.message,true)}}
+function stopCamera(){clearTimeout(ackTimer);$("scan-ack")?.classList.add("hidden");if($("scan-camera-badge")){$("scan-camera-badge").textContent="● Inactiva";$("scan-camera-badge").className="status-pill"}if(interval)clearInterval(interval);interval=null;stream?.getTracks().forEach(t=>t.stop());stream=null;$("camera-video").classList.add("hidden");$("camera-placeholder").classList.remove("hidden");$("camera-overlay").classList.add("hidden");status("Cámara detenida.")}
 function canvasFromVideo(){const v=$("camera-video");if(v.readyState<2)return null;const c=$("scan-canvas");const scale=Math.min(1,1000/v.videoWidth);c.width=Math.round(v.videoWidth*scale);c.height=Math.round(v.videoHeight*scale);c.getContext("2d",{willReadFrequently:true}).drawImage(v,0,0,c.width,c.height);return c}
 function findQR(c){if(!window.jsQR)throw Error("El lector QR no está disponible; comprueba la conexión.");const d=c.getContext("2d",{willReadFrequently:true}).getImageData(0,0,c.width,c.height);const result=jsQR(d.data,d.width,d.height,{inversionAttempts:"attemptBoth"});return result?.data||null}
 async function scanLoop(){if(busy)return;const c=canvasFromVideo();if(!c)return;let qr;try{qr=findQR(c)}catch(e){status(e.message,true);stopCamera();return}if(!qr){stable=0;lastQR="";return}if(qr===lastQR)stable++;else{lastQR=qr;stable=1}if(stable<2)return;const key=qr;if(key===lastCapture&&Date.now()-lastAt<9500)return;lastCapture=key;lastAt=Date.now();const copy=document.createElement("canvas");copy.width=c.width;copy.height=c.height;copy.getContext("2d").drawImage(c,0,0);busy=true;try{await processCanvas(copy,qr)}finally{busy=false;stable=0}}
@@ -51,14 +115,41 @@ const matches=q.type==="short"&&q.answers.some(a=>norm(a)===norm(detected));cons
 marks[q.id]={fraction:canAuto?1:null,source:"ocr",detected,confidence,reason:canAuto?"Coincidencia exacta con clave; OCR alta confianza":reason};}
 return marks}
 async function processCanvas(canvas,raw){try{status("QR detectado. Comprobando identificación…");if(!raw)throw Error("No se detectó ningún QR de Eco-Notas.");let payload;try{payload=JSON.parse(raw)}catch{throw Error("Código QR desconocido.")}if(payload.app!=="EN1"||!["omr","text"].includes(payload.t)||!Number.isInteger(payload.p))throw Error("QR no pertenece a una hoja de respuestas Eco-Notas.");const ex=E.exam(payload.e),st=E.student(payload.s);if(!ex||!st||!E.groupsOf(st).includes(ex.group))throw Error("Estudiante o examen no está registrado en este dispositivo. Importa primero la copia de datos.");if(ex.revision!==payload.r)throw Error("Versión impresa vencida: este examen fue modificado. Reimprime las hojas.");E.ensureVariations(ex);
+const uniquePage=pageKey(ex,st,payload);
+const previous=data.grades.find(r=>r.examId===ex.id&&r.studentId===st.id&&r.revision===ex.revision);
+if(previous?.scannedPages?.includes(uniquePage)){
+  const outstanding=ex.questions.filter(q=>typeof previous.answers?.[q.id]?.fraction!=="number").length;
+  updateResult(ex,st,previous,outstanding,{},true);
+  flash("repeat",st.name,formatGrade(previous),"Este examen ya fue leído. No se duplicó la nota · Pasa a otra hoja");
+  status("Hoja ya escaneada: "+st.name+". Sin duplicar su calificación.");
+  return {kind:"repeat",studentId:st.id,examId:ex.id};
+}
 const pixels=canvas.getContext("2d",{willReadFrequently:true}).getImageData(0,0,canvas.width,canvas.height);status("Buscando marcas de orientación de la hoja…");const corners=findFiducials(canvas);const H=homography(corners);
 const marks=payload.t==="omr"?decodeChoices(ex,st,payload.t,payload.p,pixels,H):await decodeText(ex,st,payload.p,pixels,H);
-if(!Object.keys(marks).length)throw Error("La hoja no contiene respuestas de este tipo.");const record=E.upsertMarks(ex,st,marks);
+if(!Object.keys(marks).length)throw Error("La hoja no contiene respuestas de este tipo.");
+const record=E.upsertMarks(ex,st,marks);
+record.scannedPages??=[];
+if(!record.scannedPages.includes(uniquePage))record.scannedPages.push(uniquePage);
+save(); // Guardar también la identidad de cada página para detectar reescaneos posteriores.
 const pending=ex.questions.filter(q=>typeof record.answers?.[q.id]?.fraction!=="number").length;
-status("Leído: "+st.name+" · "+ex.title+" · "+Object.keys(marks).length+" respuestas · "+(record.status==="complete"?"Nota "+record.finalGrade.toFixed(2)+"/5":pending+" pendientes por revisar"));
-$("scan-result").innerHTML='<p><strong>'+esc(st.name)+'</strong><br>'+esc(st.id)+' · '+esc(ex.group)+'<br>'+esc(ex.subject)+' · '+esc(ex.title)+'</p><div class="score">'+(record.status==="complete"?record.finalGrade.toFixed(2)+" / 5.00":"Revisión pendiente")+'</div><p class="muted">'+Object.keys(marks).length+' respuestas de esta hoja · '+pending+' pendientes en el examen.</p><div>'+Object.entries(marks).map(([qid,m])=>'<span class="chip">'+esc(ex.questions.findIndex(q=>q.id===qid)+1)+": "+esc(m.detected)+" "+(m.fraction===null?"?":m.fraction?"✓":"✕")+'</span> ').join("")+'</div>';
-toast("Escaneo guardado: "+st.name);E.renderReview();}catch(e){console.error(e);status("No se guardó la hoja: "+e.message,true);toast("Escaneo no válido. "+e.message,true)}}
+updateResult(ex,st,record,pending,marks);
+const kind=record.status==="complete"?"success":"pending";
+addHistory(ex,st,record,uniquePage,kind);
+flash(kind,st.name,formatGrade(record),record.status==="complete"
+  ?"✓ Nota guardada en este dispositivo · Pasa a la siguiente hoja"
+  :"Respuestas leídas; revisión pendiente · Pasa a la siguiente hoja");
+status("Hoja guardada: "+st.name+" · "+ex.title+" · "+Object.keys(marks).length+" respuestas · "+(record.status==="complete"?"Nota "+formatGrade(record):pending+" pendientes"));
+E.renderReview();
+return {kind,studentId:st.id,examId:ex.id,grade:record.finalGrade,pending};
+}catch(e){
+  console.error(e);
+  status("No se guardó la hoja: "+e.message,true);
+  flash("error","No se pudo leer","Inténtalo de nuevo","Alinea las esquinas y el QR. No se registró ninguna nota.");
+  toast("Escaneo no válido. "+e.message,true);
+  return {kind:"error",error:e.message};
+}}
+
 function renderReview(){const records=data.grades.filter(g=>g.status!=="obsolete").sort((a,b)=>(b.updatedAt||"").localeCompare(a.updatedAt||""));E.populate("review-record",records.map(g=>{const st=E.student(g.studentId),ex=E.exam(g.examId);return {value:g.examId+"|"+g.studentId,label:(st?.name||g.studentId)+" · "+(ex?.title||"Examen")+" · "+(g.status==="complete"?"Completo":"Pendiente")}}),"Selecciona un registro");const chosen=$("review-record").value;if(!chosen){$("review-list").innerHTML='<p class="muted">Escanea una hoja para mostrar la revisión.</p>';return}const [examId,studentId]=chosen.split("|"),r=data.grades.find(g=>g.examId===examId&&g.studentId===studentId),ex=E.exam(examId);if(!r||!ex)return;const pending=ex.questions.filter(q=>r.answers?.[q.id]?.fraction===null||r.answers?.[q.id]?.fraction===undefined);$("review-list").innerHTML=(!pending.length?'<p class="hint">Todas las preguntas están calificadas. Nota: '+Number(r.finalGrade).toFixed(2)+'/5.</p>':pending.map(q=>{const a=r.answers?.[q.id];return '<div class="question"><strong>'+esc(q.prompt)+'</strong><p class="muted">OCR/OMR: '+esc(a?.detected??"No escaneada")+' · '+esc(a?.reason||"Sin lectura")+'</p><p class="muted">Clave docente: '+esc(objective(q.type)?q.correct.map(n=>q.options[n]).join("; "):q.answers.join("; ")||"Evaluación docente")+'</p><label class="field"><span>Crédito (0 incorrecta, 0.5 parcial, 1 correcta)</span><input data-mark-id="'+esc(q.id)+'" type="number" step="0.1" min="0" max="1" placeholder="Puntaje por revisar"></label></div>'}).join(""))}
 function saveReview(){const selected=$("review-record").value;if(!selected)return toast("Selecciona un registro para revisar.",true);const [examId,studentId]=selected.split("|"),ex=E.exam(examId),r=data.grades.find(g=>g.examId===examId&&g.studentId===studentId);if(!ex||!r)return;let count=0;for(const input of $("review-list").querySelectorAll("input[data-mark-id]")){if(input.value.trim()==="")continue;const fraction=Number(input.value);if(!Number.isFinite(fraction)||fraction<0||fraction>1)return toast("Los créditos deben estar entre 0 y 1.",true);const qid=input.dataset.markId;const old=r.answers[qid]||{};r.answers[qid]={...old,fraction,source:"manual",reason:"Revisión del docente",at:new Date().toISOString()};count++}if(!count)return toast("Introduce al menos una revisión.",true);E.calculate(r);save();E.renderGradebook();renderReview();toast(r.status==="complete"?"Nota final "+r.finalGrade.toFixed(2)+"/5 guardada.":count+" respuestas revisadas; quedan pendientes.") }
-Object.assign(E,{startCamera,stopCamera,scanUpload,renderReview,saveReview,processCanvas,findFiducials,homography,decodeChoices});
+Object.assign(E,{startCamera,stopCamera,scanUpload,renderReview,saveReview,processCanvas,findFiducials,homography,decodeChoices,formatGrade,pageKey,updateCloudNote});
 })();
