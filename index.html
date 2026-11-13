@@ -117,7 +117,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px soli
 </head>
 <body>
 <header><div><h1>🌿 Eco-Notas <span style="color:#9fe9c9">Pro</span></h1><small>Exámenes · Escaneo QR / OMR / OCR · Libro de notas</small></div>
-<nav><button data-tab="home">Inicio</button><button data-tab="students" class="active">1. Cursos</button><button data-tab="exams">2. Exámenes</button><button data-tab="print">3. Imprimir</button><button data-tab="scan">4. Escanear</button><button data-tab="grades">5. Calificaciones</button><button data-tab="backup">6. Datos</button><button data-tab="sync">7. Nube Java</button></nav></header>
+<nav><button data-tab="home">Inicio</button><button data-tab="students" class="active">1. Cursos</button><button data-tab="exams">2. Exámenes</button><button data-tab="print">3. Imprimir</button><button data-tab="scan">4. Escanear</button><button data-tab="grades">5. Calificaciones</button><button data-tab="backup">6. Datos</button><button data-tab="sync">7. Nube</button></nav></header>
 <main>
 <section id="tab-home" class="tab">
 <div class="mobile-choice">
@@ -222,7 +222,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px soli
 <div class="grid"><div class="field"><span>Curso</span><select id="grades-group"></select></div><div class="field"><span>Materia</span><select id="grades-subject"></select></div><div class="field"><span>Año escolar</span><select id="grades-year"></select></div></div>
 <div class="row" style="margin:15px 0"><button class="btn" id="export-xlsx">Exportar libro Excel (.xlsx)</button><button class="btn secondary" id="export-csv">Exportar CSV</button></div>
 <div id="grade-summary" class="muted"></div><div class="tablewrap"><table id="gradebook"></table></div></div></section>
-<section id="tab-backup" class="tab"><div class="card"><h2>🔐 Copias y traslado del PC al celular</h2><p class="hint warning">Esta versión almacena los datos únicamente en este navegador, NO en un servidor. Para calificar desde otro dispositivo, exporta la copia e impórtala allí. Al terminar, trae la copia actualizada de vuelta al PC antes de seguir editando. No uses varios dispositivos en paralelo: aún no hay sincronización central.</p>
+<section id="tab-backup" class="tab"><div class="card"><h2>🔐 Copias y traslado del PC al celular</h2><p class="hint warning">En modo local, las notas se guardan en este navegador. Para usarlas en otro dispositivo, conecta Cloudflare Workers + D1 en la pestaña Nube o exporta e importa una copia JSON privada. Sin nube, evita editar desde dos dispositivos simultáneamente.</p>
 <div class="row" style="margin-top:18px"><button id="export-backup" class="btn">Exportar copia JSON</button><input id="import-backup" type="file" accept=".json" style="max-width:260px"><button id="load-demo" class="btn secondary">Cargar ejemplo de inglés</button><button id="clear-data" class="btn danger">Borrar datos locales</button></div>
 <p class="muted">Los listados contienen datos personales de menores. Conserva las copias privadas, no subas exámenes ni listados reales a repositorios públicos, y protege los dispositivos. El repositorio solo debe contener el programa, nunca sus notas.</p>
 <div id="backup-info" class="muted"></div></div></section>
