@@ -21,6 +21,88 @@
 .setup-options{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
 #home-device-label{color:#06764d}
 @media(max-width:750px){#tab-home{padding-top:0}.mode-card{min-height:176px}.mobile-choice{padding:12px 0}}
+
+/* Eco-Notas · sistema visual docente, claro y accesible */
+:root{--ink:#17352c;--muted:#62786f;--green:#087653;--deep:#0a3e32;--line:#d9e7de;--page:#f2f7f4;--accent:#c8f6dc;--shadow:0 12px 40px rgba(15,52,36,.065)}
+body{background:radial-gradient(ellipse at top right,#e3f2ea 0,transparent 45%),var(--page);color:var(--ink)}
+header{background:linear-gradient(112deg,#074333,#115e46 74%,#0a4e38);border-bottom:1px solid rgba(255,255,255,.13)}
+header h1{letter-spacing:-.8px}header small{font-weight:500;letter-spacing:.12px}
+nav button{transition:background .18s,transform .18s}nav button:hover{background:#32745e;transform:translateY(-1px)}
+.card{border-radius:18px;border-color:var(--line);box-shadow:var(--shadow)}
+.card h2,.card h3{letter-spacing:-.4px}.card p{color:var(--muted)}
+.btn{transition:transform .18s,box-shadow .18s,filter .18s}.btn:hover{transform:translateY(-1px);box-shadow:0 6px 15px #034b3424}
+.btn:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #16b97a;outline-offset:3px}
+input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #14aa72;outline-offset:2px}
+.eyebrow{font-size:11px;font-weight:800;color:#187452;letter-spacing:1.8px;text-transform:uppercase}
+.scanner-intro{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:5px 0 20px}
+.scanner-intro h2{font-size:clamp(24px,3.6vw,37px);line-height:1.1;letter-spacing:-1.25px;margin:7px 0 10px}
+.scanner-intro p{color:#657a70;max-width:590px;line-height:1.55;margin:0}
+.scanner-progress{display:flex;gap:12px;align-items:center;padding:14px 19px;background:#e5f4ea;border:1px solid #c4e9d3;border-radius:18px;white-space:nowrap}
+.scanner-progress strong{font-size:33px;line-height:1;color:#0b7050}.scanner-progress span{font-size:12px;color:#3d6b56;line-height:1.4;font-weight:700}
+.scanner-layout{grid-template-columns:minmax(0,1.18fr) minmax(310px,1fr);align-items:start;gap:20px}
+.scanner-card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.scanner-card-heading h3{margin:0 0 3px}.scanner-card-heading .muted{font-size:12px}
+.status-pill{font-size:11px;padding:6px 9px;background:#eff1f0;border-radius:99px;white-space:nowrap;font-weight:800;color:#61726c}
+.status-pill.live{background:#daf9e8;color:#116d45}
+.status-pill.done{background:#e1f8eb;color:#0d684a}
+.status-pill.review{background:#fff3d8;color:#926008}
+.status-pill.repeat{background:#e9f0ff;color:#3556a5}
+.scanner-camera-card{padding:18px}
+.scanner-viewfinder{min-height:340px;aspect-ratio:4/3;background:#092b22;border:6px solid #10382e;border-radius:18px;box-shadow:inset 0 0 30px #0006}
+.scanner-viewfinder video{max-height:65vh;height:100%;object-fit:contain}
+.scanner-viewfinder .overlay{border:3px solid #7bf0b4;border-radius:18px;inset:10%;box-shadow:0 0 0 300px rgba(0,0,0,.12)}
+.scanner-viewfinder .overlay:before,.scanner-viewfinder .overlay:after{content:"";position:absolute;width:31px;height:31px;border:5px solid #d2ffda;border-radius:6px}
+.scanner-viewfinder .overlay:before{left:-5px;top:-5px;border-right:0;border-bottom:0}
+.scanner-viewfinder .overlay:after{right:-5px;bottom:-5px;border-left:0;border-top:0}
+.camera-empty{display:flex;flex-direction:column;align-items:center;gap:13px;text-align:center;padding:35px;max-width:360px}
+.camera-empty-icon{font-size:64px;line-height:1;color:#7bf0b4}
+.camera-empty strong{font-size:20px;color:#f3fff8}
+.camera-empty span{color:#b8d9c9;font-size:13px;line-height:1.5}
+.scanner-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.scanner-start{flex:1;min-width:145px}
+.beep-control{font-size:12px;display:flex;align-items:center;gap:6px;color:#496759;white-space:nowrap}
+.scanner-camera-card .hint{margin-top:10px}
+.scanner-upload{border-top:1px solid #e5efe9;padding-top:10px;margin-top:15px}
+.scanner-upload summary{cursor:pointer;font-size:13px;color:#16734e;font-weight:650}
+.scanner-upload input{margin-top:9px}
+.scanner-side .card{margin-bottom:15px}
+.scanner-result-card{border-color:#cde2d4}
+.result-placeholder{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;padding:26px 16px;color:#729181}
+.result-placeholder span{font-size:33px}.result-placeholder strong{color:#355c4a}
+.result-placeholder p{max-width:320px;margin:0;font-size:12px}
+.student-result-name{font-size:22px;font-weight:800;letter-spacing:-.55px;margin:0 0 3px;color:#113c2d}
+.student-result-meta{font-size:12px;line-height:1.65;color:#64776b}
+.grade-score{margin:16px 0;background:linear-gradient(130deg,#f0fbf4,#e7f5ee);border:1px solid #c8e6d2;border-radius:15px;padding:16px}
+.grade-score strong{display:block;font-size:38px;line-height:1.2;font-weight:850;color:#086d47;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.grade-score span{font-size:12px;color:#526e5d;font-weight:650}
+.grade-score.pending{background:#fff9ea;border-color:#f1deae}.grade-score.pending strong{font-size:22px;color:#99630a}
+.result-answers{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.result-answers .chip{border-radius:8px;padding:5px 7px;background:#e8f5ed}
+.scan-sync-note{font-size:12px!important;line-height:1.5;padding:10px 12px;border-radius:11px;background:#f3f7f4;border:1px solid #e0eae4}
+.scan-history{max-height:225px;overflow:auto}
+.scan-history-item{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:10px 2px;border-bottom:1px solid #e8efea}
+.scan-history-item:last-child{border:0}
+.scan-history-item strong{font-size:13px;display:block}.scan-history-item small{display:block;color:#6e8177;font-size:11px;margin-top:3px}
+.scan-history-item .history-grade{font-size:14px;font-weight:800;color:#116e49;white-space:nowrap}
+.scan-history-item.pending .history-grade{color:#926008;font-size:11px}
+.review-details{padding:16px 19px}
+.review-details summary{cursor:pointer;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;list-style:none}
+.review-details summary strong{font-size:14px;color:#174b37}
+.review-details summary span{font-size:11px;color:#7a8d82}
+.review-details[open] summary{margin-bottom:14px}
+.scan-ack{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:21px 12px;text-align:center;background:linear-gradient(140deg,rgba(5,94,63,.97),rgba(2,49,38,.98));z-index:5;color:#fff}
+.scan-ack-icon{font-size:38px;width:76px;height:76px;border:3px solid #90fac0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ffdd;margin-bottom:2px}
+.scan-ack-label{font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:2px;color:#bcfbd9}
+.scan-ack strong{font-size:clamp(19px,3vw,28px);line-height:1.15;max-width:96%}
+.scan-ack-grade{font-size:clamp(23px,5vw,37px);font-weight:850;letter-spacing:-.7px}
+.scan-ack-next{font-size:12px;line-height:1.5;color:#d1f4df;max-width:290px}
+.scan-ack.pending{background:linear-gradient(145deg,#73501a,#382b19)}
+.scan-ack.repeat{background:linear-gradient(145deg,#23518a,#192e50)}
+.scan-ack.error{background:linear-gradient(145deg,#8f3129,#481b24)}
+@media(max-width:900px){.scanner-layout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.scanner-intro{align-items:flex-start}.scanner-progress{padding:9px;gap:7px}.scanner-progress strong{font-size:23px}.scanner-progress span{font-size:10px}.scanner-viewfinder{min-height:265px;aspect-ratio:3/4}.scanner-camera-card{padding:12px}.scanner-intro h2{font-size:26px}nav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}nav button{white-space:nowrap;flex:none}.scanner-intro p{font-size:13px}}
+@media print{.scan-ack,.scanner-page{display:none!important}}
+
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
@@ -108,14 +190,33 @@
 <section id="tab-print" class="tab"><div class="card"><h2>🖨️ Imprimir exámenes con QR individual</h2><p>El sistema genera un cuadernillo y hojas de respuesta por estudiante. El QR contiene únicamente identificadores; la clave correcta permanece guardada en los datos del profesor.</p>
 <div class="grid"><div class="field"><span>Evaluación</span><select id="print-exam"></select></div><div class="field"><span>Estudiante</span><select id="print-student"><option value="all">Todo el curso</option></select></div></div>
 <div class="row" style="margin-top:12px"><button id="prepare-print" class="btn secondary">Preparar hojas</button><button id="print-button" class="btn">Imprimir / Guardar PDF</button></div><div class="hint warning" style="margin-top:12px">Imprime al 100 %, tamaño A4, sin márgenes añadidos y sin ajustar escala. La zona de burbujas permite un máximo de 40 preguntas objetivas por hoja; las escritas ocupan hasta 4 por hoja. Utiliza impresora y papel con buen contraste.</div><div id="print-count" class="muted" style="margin-top:12px"></div></div></section>
-<section id="tab-scan" class="tab"><div class="two"><div class="card"><h2>📷 Escáner del celular</h2><p class="muted">Apunta a la hoja completa y mantén el celular estable. No hace falta pulsar para tomar una fotografía: tras detectar el QR y las cuatro marcas negras, captura el fotograma automáticamente.</p>
-<div class="camera"><div id="camera-placeholder" style="padding:30px;text-align:center">Activa la cámara tras abrir la aplicación en HTTPS.</div><video id="camera-video" class="hidden" autoplay muted playsinline></video><div id="camera-overlay" class="overlay hidden"><span>QR + cuatro esquinas</span></div></div>
-<canvas id="scan-canvas" class="hidden"></canvas><div class="row" style="margin-top:13px"><button id="start-camera" class="btn">Activar cámara</button><button id="stop-camera" class="btn secondary">Detener</button></div>
-<p class="muted">Alternativa para probar: subir una imagen de una hoja contestada.</p><input id="scan-upload" type="file" accept="image/*" capture="environment">
-<p id="scan-status" class="hint">Esperando hoja…</p></div>
-<div class="card"><h3>Resultado detectado</h3><div id="scan-result"><p class="muted">Aquí se muestran el estudiante, el examen y las preguntas identificadas.</p></div><div class="divider"></div>
-<h3>Revisión de respuestas pendientes</h3><p class="muted">Las respuestas escritas y las marcas ambiguas deben confirmarse. Se prohíbe cerrar notas incompletas.</p>
-<select id="review-record"></select><div id="review-list"></div><button id="save-review" class="btn">Guardar revisión</button>
+<section id="tab-scan" class="tab scanner-page">
+<div class="scanner-intro"><div><span class="eyebrow">MODO DOCENTE · CORRECCIÓN CONTINUA</span><h2>Escanea, confirma y continúa.</h2><p>Coloca cada hoja dentro del marco. Eco-Notas detecta automáticamente las respuestas; no tienes que tomar una foto manualmente.</p></div><div class="scanner-progress" aria-live="polite"><strong id="scan-count">0</strong><span>hojas nuevas leídas<br>en esta sesión</span></div></div>
+<div class="two scanner-layout"><div class="card scanner-camera-card"><div class="scanner-card-heading"><div><h3><span aria-hidden="true">▣</span> Cámara inteligente</h3><span class="muted">Escaneo continuo mediante QR y marcas OMR</span></div><span id="scan-camera-badge" class="status-pill">● Inactiva</span></div>
+<div class="camera scanner-viewfinder">
+<div id="camera-placeholder" class="camera-empty"><div class="camera-empty-icon" aria-hidden="true">⌗</div><strong>Listo para escanear</strong><span>Activa la cámara y encuadra el examen completo, con sus cuatro esquinas negras.</span></div>
+<video id="camera-video" class="hidden" autoplay muted playsinline></video>
+<div id="camera-overlay" class="overlay hidden"><span>Alinea las 4 esquinas y el QR</span></div>
+<div id="scan-ack" class="scan-ack hidden" role="status" aria-live="polite" aria-atomic="true">
+<span class="scan-ack-icon" id="scan-ack-icon" aria-hidden="true">✓</span>
+<span class="scan-ack-label" id="scan-ack-label">Lectura completa</span>
+<strong id="scan-ack-student">Estudiante</strong>
+<span class="scan-ack-grade" id="scan-ack-grade">5,00 / 5,00</span>
+<span class="scan-ack-next" id="scan-ack-next">✓ Registrado en este dispositivo · Pasa a la siguiente hoja</span>
+</div>
+</div>
+<canvas id="scan-canvas" class="hidden"></canvas>
+<div class="scanner-toolbar"><button id="start-camera" class="btn scanner-start"><span aria-hidden="true">◉</span> Activar cámara</button><button id="stop-camera" class="btn secondary">Detener</button><label class="beep-control"><input type="checkbox" id="scan-sound" checked> Aviso sonoro</label></div>
+<p id="scan-status" class="hint" role="status" aria-live="polite">Esperando hoja…</p>
+<details class="scanner-upload"><summary>¿No funciona la cámara? Probar con una imagen</summary><p class="muted">Usa una imagen nítida de la hoja contestada, con QR y las cuatro esquinas.</p><input id="scan-upload" type="file" accept="image/*" capture="environment"></details>
+</div>
+<div class="scanner-side">
+<div class="card scanner-result-card"><div class="scanner-card-heading"><div><span class="eyebrow">ÚLTIMA LECTURA</span><h3>Resultado del estudiante</h3></div><span id="scan-record-badge" class="status-pill">En espera</span></div>
+<div id="scan-result"><div class="result-placeholder"><span aria-hidden="true">▤</span><strong>Esperando el primer examen</strong><p>Cuando se detecte una hoja verás aquí el nombre, la materia, la nota y si queda alguna pregunta por revisar.</p></div></div>
+<p id="scan-cloud-status" class="scan-sync-note">Guardado local activo. Conecta la nube para sincronizar varios dispositivos.</p>
+</div>
+<div class="card"><div class="scanner-card-heading"><h3>Lecturas de esta sesión</h3><span class="tag">Sin duplicados</span></div><div id="scan-history" class="scan-history"><p class="muted">Las hojas confirmadas aparecerán aquí.</p></div></div>
+<details class="card review-details" id="scan-review-details"><summary><strong>Revisar respuestas pendientes</strong><span>Calificación asistida por el docente</span></summary><p class="muted">Las respuestas escritas, ambiguas o abiertas requieren confirmación antes de obtener la nota definitiva.</p><select id="review-record"></select><div id="review-list"></div><button id="save-review" class="btn">Guardar revisión</button></details>
 </div></div></section>
 <section id="tab-grades" class="tab"><div class="card"><h2>📊 Libro anual de calificaciones</h2><p class="muted">Una fila por estudiante, una columna por examen de la misma materia y año. Los exámenes incompletos aparecen como pendientes; no afectan al promedio final hasta su revisión.</p>
 <div class="grid"><div class="field"><span>Curso</span><select id="grades-group"></select></div><div class="field"><span>Materia</span><select id="grades-subject"></select></div><div class="field"><span>Año escolar</span><select id="grades-year"></select></div></div>
