@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#11694a">
+<title>Eco-Notas · Evaluación inteligente</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.88em' font-size='88'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:#142d28;background:#f4f7f6;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{background:#094a38;color:#fff;padding:16px max(16px,calc((100vw - 1250px)/2));display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}header h1{font-size:23px;margin:0}header small{color:#b8e6d5}nav{display:flex;flex-wrap:wrap;gap:6px}nav button{background:#20624e;color:#e8fff5;border:0;border-radius:10px;padding:9px 12px}nav button.active{background:#fff;color:#094a38}main{max-width:1250px;margin:0 auto;padding:22px 15px 80px}section.tab{display:none}section.tab.active{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}.two{display:grid;grid-template-columns:minmax(260px,360px) minmax(0,1fr);gap:16px}.card{background:#fff;border:1px solid #dde8e3;border-radius:16px;padding:20px;box-shadow:0 6px 24px #163d2b0a;margin-bottom:15px}.card h2,.card h3{margin:0 0 12px}.card p{line-height:1.5}h2{font-size:21px}h3{font-size:16px}.muted{color:#5a6c66;font-size:13px}.hint{padding:10px 12px;background:#edf7f2;border:1px solid #bedfce;border-radius:10px;font-size:13px}.warning{background:#fff6df;border-color:#eed49f}.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.column{display:flex;flex-direction:column;gap:10px}.field{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}.field label,.field>span{font-size:12px;font-weight:700;color:#385347}input,select,textarea,button{font:inherit}input,select,textarea{padding:10px 11px;border:1px solid #c3d5cb;background:#fff;border-radius:9px;max-width:100%;width:100%;color:#142d28}textarea{resize:vertical;min-height:80px}input[type=file]{font-size:12px}input[type=checkbox]{width:auto}button{cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;background:#087a50;border:1px solid #087a50;color:white;border-radius:10px;font-weight:650;gap:6px}.btn:hover{filter:brightness(.94)}.btn.secondary{background:#eef5f0;color:#11553b;border-color:#c9ddce}.btn.danger{background:#fff0ed;color:#a23322;border-color:#f1c0b9}.btn.small{padding:6px 9px;font-size:12px}.stack>*+*{margin-top:12px}.divider{height:1px;background:#e1eae5;margin:15px 0}.question{border:1px solid #d7e3dc;padding:14px;border-radius:11px;margin:10px 0;background:#fafffc}.question img{max-width:100%;max-height:160px;object-fit:contain}.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{font-size:12px;background:#d8f4e8;border-radius:20px;padding:5px 9px}.good{color:#137548}.bad{color:#aa342a}.tag{font-size:11px;padding:4px 7px;border-radius:6px;background:#e6f0ef}.tag.pending{background:#fff0c9;color:#7d5710}.tablewrap{width:100%;overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th,td{text-align:left;border-bottom:1px solid #e6ede8;padding:10px 12px}thead{background:#eef6f1}td input[type=number]{width:100px}.camera{background:#102018;border-radius:13px;min-height:230px;overflow:hidden;position:relative;display:flex;justify-content:center;align-items:center;color:#d2f2e4}.camera video{width:100%;max-height:65vh;display:block;object-fit:contain}.camera .overlay{pointer-events:none;position:absolute;inset:8%;border:2px dashed #60e7a3;border-radius:12px}.camera .overlay span{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:#122c21db;border-radius:8px;padding:6px 10px;white-space:nowrap;font-size:12px}.hidden{display:none!important}#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#153c2e;color:#fff;padding:12px 20px;border-radius:12px;z-index:50;max-width:90vw;box-shadow:0 10px 30px #0004}.score{font-size:24px;font-weight:800;color:#0e7047}.big{font-size:30px;font-weight:750}.print-pack{display:none}.print-sheet{width:210mm;min-height:297mm;background:white;color:black;position:relative;font:11pt Arial,sans-serif;break-after:page;page-break-after:always}.print-sheet .marker{position:absolute;background:black;width:8mm;height:8mm}.print-sheet .tl{left:8mm;top:8mm}.print-sheet .tr{right:8mm;top:8mm}.print-sheet .bl{left:8mm;bottom:8mm}.print-sheet .br{right:8mm;bottom:8mm}.print-sheet .header-print{position:absolute;left:20mm;top:18mm;right:20mm}.print-sheet .sheet-qr{position:absolute;right:18mm;top:18mm;background:white;padding:1mm}.print-sheet .sheet-qr img{width:27mm;height:27mm}.print-sheet .answer-row{position:absolute;font-size:10pt}.print-sheet .answer-bubble{position:absolute;width:7mm;height:7mm;border:1.2pt solid black;border-radius:50%;background:#fff}.print-sheet .bubble-letter{position:absolute;font-size:9pt;top:2mm}.print-sheet .ans-box{position:absolute;left:17mm;width:176mm;height:27mm;border:1.3pt solid #111;overflow:hidden}.print-sheet .ans-label{position:absolute;left:18mm;width:176mm;font-size:10pt;font-weight:bold}.print-sheet .question-print{break-inside:avoid;border-bottom:1px solid #ddd;margin:10px 0;padding:10px 0}.print-sheet .question-print img{max-width:155mm;max-height:65mm;display:block;object-fit:contain;margin:5px 0}@page{size:A4;margin:0}
+@media(max-width:750px){.two{grid-template-columns:1fr}header{padding:13px}.card{padding:15px}nav{width:100%}nav button{flex:1;font-size:12px;padding:8px 6px}}
+@media print{body>header,main,#toast{display:none!important}.print-pack{display:block!important}.print-sheet{margin:0;box-shadow:none}.print-sheet:last-child{break-after:auto}}
+</style>
+<script defer src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mammoth@1.10.0/mammoth.browser.min.js"></script>
+<script defer src="./app.js"></script>
+</head>
+<body>
+<header><div><h1>🌿 Eco-Notas <span style="color:#9fe9c9">Pro</span></h1><small>Exámenes · Escaneo QR / OMR / OCR · Libro de notas</small></div>
+<nav><button data-tab="students" class="active">1. Cursos</button><button data-tab="exams">2. Exámenes</button><button data-tab="print">3. Imprimir</button><button data-tab="scan">4. Escanear</button><button data-tab="grades">5. Calificaciones</button><button data-tab="backup">6. Datos</button></nav></header>
+<main>
+<section id="tab-students" class="tab active">
+<div class="card"><h2>👥 Estudiantes y cursos</h2><p class="muted">Crea cursos, asigna códigos permanentes y carga listados desde Excel, CSV o tablas de Word. El mismo código conserva todas las notas del año.</p>
+<div class="grid">
+<div class="field"><span>Curso / Grupo</span><select id="group-select"></select></div>
+<div class="field"><span>Crear curso</span><div class="row"><input id="new-group" placeholder="Ej.: 7-A"><button class="btn" id="add-group">Crear</button></div></div>
+</div></div>
+<div class="two"><div class="card"><h3>Agregar un estudiante</h3><div class="column">
+<div class="field"><span>Código institucional (opcional)</span><input id="student-id" placeholder="Ej.: 2026-001"></div>
+<div class="field"><span>Nombre completo</span><input id="student-name" placeholder="Nombres y apellidos"></div>
+<button id="add-student" class="btn">Agregar estudiante</button><div class="divider"></div>
+<h3>Importar listado</h3><p class="muted">Columnas sugeridas: Código, Nombre, Apellidos, Curso. Se aceptan .xlsx, .csv, .txt y .docx.</p>
+<input id="students-file" type="file" accept=".xlsx,.csv,.txt,.docx">
+<div id="import-status" class="muted"></div>
+<button id="download-template" class="btn secondary">Descargar plantilla CSV</button></div></div>
+<div class="card"><h3>Estudiantes inscritos <span id="students-count" class="chip">0</span></h3><div class="tablewrap"><table><thead><tr><th>Código</th><th>Nombre</th><th>Curso</th><th></th></tr></thead><tbody id="students-body"></tbody></table></div></div></div>
+</section>
+<section id="tab-exams" class="tab"><div class="card"><h2>📝 Banco de preguntas y exámenes</h2><div class="grid">
+<div class="field"><span>Examen existente</span><select id="exam-select"></select></div><div class="field"><span>Materia</span><input id="exam-subject" placeholder="Inglés"></div><div class="field"><span>Año escolar</span><input type="number" id="exam-year" min="2020" max="2100"></div>
+<div class="field"><span>Curso</span><select id="exam-group"></select></div><div class="field"><span>Nombre del quiz / evaluación</span><input id="exam-title" placeholder="Quiz 1 · Vocabulary"></div>
+<div class="field"><span>Fecha de evaluación</span><input id="exam-date" type="date"></div></div>
+<div class="row" style="margin-top:12px"><button id="new-exam" class="btn secondary">+ Nuevo examen</button><button id="save-exam" class="btn">Guardar examen y versiones</button><button id="delete-exam" class="btn danger">Eliminar examen</button></div>
+<div class="hint warning" style="margin-top:13px">Cada pregunta admite un peso numérico opcional. Si todos se dejan en blanco, se reparten 5 puntos por igual. Si algunos tienen peso, los restantes valen 1 unidad y se normaliza el total a 5. Las preguntas escritas se revisan antes de cerrar la nota cuando sea necesario.</div>
+</div>
+<div class="two"><div class="card"><h3>Agregar pregunta</h3><div class="column">
+<div class="field"><span>Tipo de respuesta</span><select id="q-type">
+<option value="single">Selección única A, B, C, D</option>
+<option value="multi">Selección múltiple (varias correctas)</option>
+<option value="tf">Verdadero / Falso</option>
+<option value="image-choice">Señalar zona de imagen mediante opciones</option>
+<option value="short">Palabra / traducción corta (OCR)</option>
+<option value="open">Respuesta abierta (revisión docente)</option>
+<option value="match">Relacionar / unir columnas (revisión docente)</option>
+</select></div>
+<div class="field"><span>Enunciado (puede ser español o inglés)</span><textarea id="q-prompt" placeholder="What is in the picture?"></textarea></div>
+<div class="field"><span>Imagen opcional (JPG, PNG, WEBP)</span><input id="q-image" type="file" accept="image/*"><div id="q-image-preview" class="muted"></div></div>
+<div class="field" id="q-options-box"><span>Opciones A-D, una por línea (máx. cuatro)</span><textarea id="q-options" placeholder="Apple&#10;Orange&#10;Banana&#10;Pear"></textarea></div>
+<div class="field"><span id="q-expected-title">Respuesta correcta (A, B... o texto esperado)</span><input id="q-expected" placeholder="A"><small class="muted" id="q-expected-help">Para selección múltiple: A,C. Para OCR: apple; an apple (alternativas).</small></div>
+<div class="field"><span>Peso de la pregunta (opcional)</span><input id="q-weight" type="number" min="0.01" step="0.1" placeholder="Sin asignar = automático"></div>
+<div class="field" id="q-mode-box"><span>Modo de respuesta escrita</span><select id="q-mode"><option value="either">Impresa o manuscrita</option><option value="printed">Impresa</option><option value="handwritten">Manuscrita</option></select></div>
+<button id="add-question" class="btn">Añadir pregunta</button>
+</div></div><div class="card"><h3>Preguntas del examen <span id="questions-count" class="chip">0</span></h3><div id="questions-list"></div></div></div>
+</section>
+<section id="tab-print" class="tab"><div class="card"><h2>🖨️ Imprimir exámenes con QR individual</h2><p>El sistema genera un cuadernillo y hojas de respuesta por estudiante. El QR contiene únicamente identificadores; la clave correcta permanece guardada en los datos del profesor.</p>
+<div class="grid"><div class="field"><span>Evaluación</span><select id="print-exam"></select></div><div class="field"><span>Estudiante</span><select id="print-student"><option value="all">Todo el curso</option></select></div></div>
+<div class="row" style="margin-top:12px"><button id="prepare-print" class="btn secondary">Preparar hojas</button><button id="print-button" class="btn">Imprimir / Guardar PDF</button></div><div class="hint warning" style="margin-top:12px">Imprime al 100 %, tamaño A4, sin márgenes añadidos y sin ajustar escala. La zona de burbujas permite un máximo de 40 preguntas objetivas por hoja; las escritas ocupan hasta 4 por hoja. Utiliza impresora y papel con buen contraste.</div><div id="print-count" class="muted" style="margin-top:12px"></div></div></section>
+<section id="tab-scan" class="tab"><div class="two"><div class="card"><h2>📷 Escáner del celular</h2><p class="muted">Apunta a la hoja completa y mantén el celular estable. No hace falta pulsar para tomar una fotografía: tras detectar el QR y las cuatro marcas negras, captura el fotograma automáticamente.</p>
+<div class="camera"><div id="camera-placeholder" style="padding:30px;text-align:center">Activa la cámara tras abrir la aplicación en HTTPS.</div><video id="camera-video" class="hidden" autoplay muted playsinline></video><div id="camera-overlay" class="overlay hidden"><span>QR + cuatro esquinas</span></div></div>
+<canvas id="scan-canvas" class="hidden"></canvas><div class="row" style="margin-top:13px"><button id="start-camera" class="btn">Activar cámara</button><button id="stop-camera" class="btn secondary">Detener</button></div>
+<p class="muted">Alternativa para probar: subir una imagen de una hoja contestada.</p><input id="scan-upload" type="file" accept="image/*" capture="environment">
+<p id="scan-status" class="hint">Esperando hoja…</p></div>
+<div class="card"><h3>Resultado detectado</h3><div id="scan-result"><p class="muted">Aquí se muestran el estudiante, el examen y las preguntas identificadas.</p></div><div class="divider"></div>
+<h3>Revisión de respuestas pendientes</h3><p class="muted">Las respuestas escritas y las marcas ambiguas deben confirmarse. Se prohíbe cerrar notas incompletas.</p>
+<select id="review-record"></select><div id="review-list"></div><button id="save-review" class="btn">Guardar revisión</button>
+</div></div></section>
+<section id="tab-grades" class="tab"><div class="card"><h2>📊 Libro anual de calificaciones</h2><p class="muted">Una fila por estudiante, una columna por examen de la misma materia y año. Los exámenes incompletos aparecen como pendientes; no afectan al promedio final hasta su revisión.</p>
+<div class="grid"><div class="field"><span>Curso</span><select id="grades-group"></select></div><div class="field"><span>Materia</span><select id="grades-subject"></select></div><div class="field"><span>Año escolar</span><select id="grades-year"></select></div></div>
+<div class="row" style="margin:15px 0"><button class="btn" id="export-xlsx">Exportar libro Excel (.xlsx)</button><button class="btn secondary" id="export-csv">Exportar CSV</button></div>
+<div id="grade-summary" class="muted"></div><div class="tablewrap"><table id="gradebook"></table></div></div></section>
+<section id="tab-backup" class="tab"><div class="card"><h2>🔐 Copias y traslado del PC al celular</h2><p class="hint warning">Esta versión almacena los datos únicamente en este navegador, NO en un servidor. Para calificar desde otro dispositivo, exporta la copia e impórtala allí. Al terminar, trae la copia actualizada de vuelta al PC antes de seguir editando. No uses varios dispositivos en paralelo: aún no hay sincronización central.</p>
+<div class="row" style="margin-top:18px"><button id="export-backup" class="btn">Exportar copia JSON</button><input id="import-backup" type="file" accept=".json" style="max-width:260px"><button id="load-demo" class="btn secondary">Cargar ejemplo de inglés</button><button id="clear-data" class="btn danger">Borrar datos locales</button></div>
+<p class="muted">Los listados contienen datos personales de menores. Conserva las copias privadas, no subas exámenes ni listados reales a repositorios públicos, y protege los dispositivos. El repositorio solo debe contener el programa, nunca sus notas.</p>
+<div id="backup-info" class="muted"></div></div></section>
+</main>
+<div id="print-pack" class="print-pack"></div><div id="toast" class="hidden"></div>
+</body></html>
