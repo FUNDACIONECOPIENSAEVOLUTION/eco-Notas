@@ -23,8 +23,17 @@ jobs:
           node --check exam.js
           node --check scan.js
           node --check app.js
+          node --check sync.js
       - name: Pruebas unitarias
         run: node tests/smoke.cjs
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Compilar y probar backend Java
+        run: |
+          javac backend/EcoNotasServer.java backend/EcoNotasServerTest.java
+          java -cp backend EcoNotasServerTest
   deploy:
     name: Publicar GitHub Pages
     needs: test
@@ -39,7 +48,7 @@ jobs:
       - name: Preparar archivos de publicación
         run: |
           mkdir -p _site
-          cp index.html state.js exam.js scan.js app.js _site/
+          cp index.html state.js exam.js scan.js app.js sync.js _site/
           touch _site/.nojekyll
       - name: Empaquetar sitio
         uses: actions/upload-pages-artifact@v3
