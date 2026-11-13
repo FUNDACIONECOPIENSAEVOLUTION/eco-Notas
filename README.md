@@ -77,6 +77,28 @@ Configura **\`ECONOTAS_ALLOWED_ORIGIN\`** con el origen exacto del sitio, sin la
 
 **Estado del servidor Java:** piloto para **un docente/una instancia**. No tiene todavía cuentas independientes por docente, roles de institución, cifrado de datos en reposo, combinación de cambios, copias de seguridad automáticas, políticas de retención ni auditoría reglamentaria. Antes de usarlo con expedientes de menores, deben implementarse controles y acuerdos adecuados de protección de datos.
 
+
+## Escáner móvil renovado (confirmación visual)
+
+La aplicación detecta el celular y presenta dos modos principales: **Escanear y calificar** y **Administrar exámenes**.
+
+Cuando el docente enfoca una hoja de respuestas, el programa identifica estudiante, curso, evaluación y respuestas. Si reconoce todas las preguntas, aparece una confirmación grande con el **nombre del estudiante, la nota en escala 0,00–5,00 y el aviso «Pasa a la siguiente hoja»**. El resultado queda guardado en el navegador. Si hay preguntas abiertas, OCR dudoso o páginas pendientes, aparece **Revisión pendiente** en lugar de una nota final engañosa.
+
+Cada hoja se identifica por el examen, versión, estudiante, tipo y número de página. Un escaneo repetido muestra **«Hoja ya escaneada»** y no duplica el registro ni incrementa el contador. Para volver a escanear intencionalmente hay un botón **Permitir reescaneo de esta hoja**, con confirmación del profesor. La pantalla presenta un historial de la sesión y un aviso sonoro opcional (sujeto a los permisos del teléfono).
+
+La confirmación del escáner significa **guardado local**. La sección Nube muestra por separado el estado de sincronización: no se debe considerar que Cloudflare o Java guardaron la nota hasta que el servidor haya confirmado la operación. Las pruebas automatizadas verifican el reconocimiento sintético y el bloqueo de duplicados. Falta completar la prueba real con fotografías y modelos de celulares distintos.
+
+## Cloudflare Workers + D1 (opción gratuita)
+
+Se agregó el directorio **cloudflare/** que implementa el mismo protocolo de sincronización que el backend Java, mediante Workers y D1. Es una alternativa adecuada para empezar sin una máquina virtual. Incluye:
+
+- API autenticada mediante contraseña configurable como **Cloudflare Secret**.
+- Base D1 que almacena el estado y soporta control de versiones **ETag / If-Match**.
+- Prevención de sobrescrituras por ediciones simultáneas.
+- Archivo de configuración Wrangler, esquema SQL, instrucciones y prueba automatizada.
+
+**Estado actual:** el frontend está publicado con GitHub Pages; Cloudflare todavía necesita ser instalado en la cuenta del administrador. Para hacerlo sin compartir datos ni credenciales, sigue **cloudflare/README.md**. La cuenta Cloudflare debe autorizar Wrangler o se puede usar Work con un navegador autenticado. En producción, el piloto solo tiene una identidad de docente, no implementa aislamiento por institución ni auditoría de notas; antes de datos reales de menores se necesitan controles adicionales de privacidad y recuperación.
+
 ## Compatibilidad por tipo
 
 | Tipo | Corrección |
