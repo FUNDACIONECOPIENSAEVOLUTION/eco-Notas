@@ -213,7 +213,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px soli
 <div class="scanner-side">
 <div class="card scanner-result-card"><div class="scanner-card-heading"><div><span class="eyebrow">ÚLTIMA LECTURA</span><h3>Resultado del estudiante</h3></div><span id="scan-record-badge" class="status-pill">En espera</span></div>
 <div id="scan-result"><div class="result-placeholder"><span aria-hidden="true">▤</span><strong>Esperando el primer examen</strong><p>Cuando se detecte una hoja verás aquí el nombre, la materia, la nota y si queda alguna pregunta por revisar.</p></div></div>
-<p id="scan-cloud-status" class="scan-sync-note">Guardado local activo. Conecta la nube para sincronizar varios dispositivos.</p>
+<button id="scan-retry" class="btn secondary hidden" style="margin-top:9px" type="button">↻ Permitir reescaneo de esta hoja</button><p id="scan-cloud-status" class="scan-sync-note">Guardado local activo. Conecta la nube para sincronizar varios dispositivos.</p>
 </div>
 <div class="card"><div class="scanner-card-heading"><h3>Lecturas de esta sesión</h3><span class="tag">Sin duplicados</span></div><div id="scan-history" class="scan-history"><p class="muted">Las hojas confirmadas aparecerán aquí.</p></div></div>
 <details class="card review-details" id="scan-review-details"><summary><strong>Revisar respuestas pendientes</strong><span>Calificación asistida por el docente</span></summary><p class="muted">Las respuestas escritas, ambiguas o abiertas requieren confirmación antes de obtener la nota definitiva.</p><select id="review-record"></select><div id="review-list"></div><button id="save-review" class="btn">Guardar revisión</button></details>
