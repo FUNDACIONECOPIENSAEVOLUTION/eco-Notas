@@ -30,6 +30,7 @@ jobs:
           node tests/smoke.cjs
           node tests/sync.cjs
           node tests/scan-ui.cjs
+          node tests/cloudflare.mjs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
